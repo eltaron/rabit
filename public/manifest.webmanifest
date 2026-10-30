@@ -1,0 +1,33 @@
+{
+  "id": "./",
+  "name": "رابط — البوابة الرسمية لمحافظة كفر الشيخ",
+  "short_name": "رابط",
+  "description": "منصة محافظة كفر الشيخ الرسمية لتداول البيانات المكانية والوصفية ودعم اتخاذ القرار.",
+  "lang": "ar",
+  "dir": "rtl",
+  "start_url": "./dashboard?source=pwa",
+  "scope": "./",
+  "display": "standalone",
+  "display_override": ["window-controls-overlay", "standalone", "minimal-ui"],
+  "orientation": "any",
+  "background_color": "#0A2924",
+  "theme_color": "#0A2924",
+  "categories": ["government", "productivity", "utilities"],
+  "icons": [
+    { "src": "assets/img/pwa/icon-72.png", "sizes": "72x72", "type": "image/png", "purpose": "any" },
+    { "src": "assets/img/pwa/icon-96.png", "sizes": "96x96", "type": "image/png", "purpose": "any" },
+    { "src": "assets/img/pwa/icon-128.png", "sizes": "128x128", "type": "image/png", "purpose": "any" },
+    { "src": "assets/img/pwa/icon-144.png", "sizes": "144x144", "type": "image/png", "purpose": "any" },
+    { "src": "assets/img/pwa/icon-152.png", "sizes": "152x152", "type": "image/png", "purpose": "any" },
+    { "src": "assets/img/pwa/icon-192.png", "sizes": "192x192", "type": "image/png", "purpose": "any" },
+    { "src": "assets/img/pwa/icon-384.png", "sizes": "384x384", "type": "image/png", "purpose": "any" },
+    { "src": "assets/img/pwa/icon-512.png", "sizes": "512x512", "type": "image/png", "purpose": "any" },
+    { "src": "assets/img/pwa/maskable-192.png", "sizes": "192x192", "type": "image/png", "purpose": "maskable" },
+    { "src": "assets/img/pwa/maskable-512.png", "sizes": "512x512", "type": "image/png", "purpose": "maskable" }
+  ],
+  "shortcuts": [
+    { "name": "لوحة التحكم", "short_name": "الرئيسية", "url": "./dashboard?source=pwa", "icons": [{ "src": "assets/img/pwa/icon-96.png", "sizes": "96x96" }] },
+    { "name": "الخريطة التفاعلية", "short_name": "الخريطة", "url": "./map?source=pwa", "icons": [{ "src": "assets/img/pwa/icon-96.png", "sizes": "96x96" }] },
+    { "name": "الإرسالات والبيانات", "short_name": "الإرسالات", "url": "./submissions?source=pwa", "icons": [{ "src": "assets/img/pwa/icon-96.png", "sizes": "96x96" }] }
+  ]
+}

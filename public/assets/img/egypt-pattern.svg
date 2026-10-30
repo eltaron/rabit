@@ -1,0 +1,19 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="160" height="160" viewBox="0 0 160 160" fill="none" stroke="#B8954F" stroke-width="1">
+  <!-- Egyptian grid / temple lines -->
+  <path d="M0 2h160M0 6h160M0 154h160M0 158h160"/>
+  <!-- Sun disk -->
+  <circle cx="80" cy="80" r="14"/>
+  <circle cx="80" cy="80" r="20" stroke-dasharray="2 4"/>
+  <!-- Lotus (abstract) -->
+  <path d="M80 36c-6 8-6 18 0 26 6-8 6-18 0-26z"/>
+  <path d="M80 62c-10-4-18-12-20-22 10 2 18 10 20 22z"/>
+  <path d="M80 62c10-4 18-12 20-22-10 2-18 10-20 22z"/>
+  <path d="M80 98v26M72 124h16"/>
+  <!-- Papyrus (abstract) -->
+  <path d="M20 120V84M20 84l-10-14h20z"/>
+  <path d="M140 120V84M140 84l-10-14h20z"/>
+  <!-- Abstract hieroglyphic geometry -->
+  <path d="M14 30h12v12H14zM134 30h12v12h-12z"/>
+  <path d="M40 140l8-10 8 10M104 140l8-10 8 10"/>
+  <path d="M36 22h20M104 22h20"/>
+</svg>

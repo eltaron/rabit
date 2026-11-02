@@ -35,6 +35,15 @@ class OctagonAccountSeeder extends Seeder
             $user->save();
         }
 
+        // الحساب مستثنى من المصادقة الثنائية: امسح أي بيانات 2FA قديمة
+        // (قد تكون مشفّرة بـ APP_KEY مختلف فتسبب "The MAC is invalid")
+        $user->forceFill([
+            'two_factor_enabled' => false,
+            'two_factor_secret' => null,
+            'two_factor_recovery_codes' => null,
+            'two_factor_confirmed_at' => null,
+        ])->save();
+
         $user->syncRoles(['octagon']);
     }
 }

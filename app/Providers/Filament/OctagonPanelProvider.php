@@ -3,7 +3,6 @@
 namespace App\Providers\Filament;
 
 use App\Filament\Pages\Dashboard;
-use App\Http\Middleware\Check2FA;
 use Filament\Actions\Action;
 use Filament\FontProviders\GoogleFontProvider;
 use Filament\Http\Middleware\Authenticate;
@@ -101,9 +100,8 @@ class OctagonPanelProvider extends PanelProvider
                 DispatchServingFilamentEvent::class,
             ])
             ->authMiddleware([
+                // لوحة Octagon مستثناة من المصادقة الثنائية (كلمة المرور فقط)
                 Authenticate::class,
-                // نفس المصادقة الثنائية الإجبارية في الموقع (الإعداد/إدخال الرمز من صفحات الموقع ثم العودة للوحة)
-                Check2FA::class,
             ]);
     }
 }

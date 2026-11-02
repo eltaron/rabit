@@ -23,6 +23,11 @@ class Check2FA
             return $next($request);
         }
 
+        // حسابات Octagon فقط مستثناة من المصادقة الثنائية
+        if (RedirectOctagonUsers::isOctagonOnly($user)) {
+            return $next($request);
+        }
+
         if ($user->hasTwoFactor()) {
             if (! $request->session()->get('2fa_verified')) {
                 return $this->deny($request, 'challenge', 'أدخل رمز المصادقة الثنائية للمتابعة.');

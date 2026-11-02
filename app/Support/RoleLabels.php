@@ -67,6 +67,7 @@ class RoleLabels
         'authority' => 'السلطة المختصة',
         'gis_officer' => 'مسؤول نظم المعلومات الجغرافية',
         'viewer' => 'مستعرض (قراءة فقط)',
+        'octagon' => 'لوحة Octagon (إحصائيات - عرض فقط)',
     ];
 
     private static ?array $custom = null;

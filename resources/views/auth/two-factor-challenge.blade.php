@@ -61,6 +61,15 @@
             (toRecovery ? rec : otp).querySelector('input:not([type=hidden])').focus();
         });
         const code = document.getElementById('code');
+        // منع الإرسال المزدوج (إرسال تلقائي عند 6 أرقام + Enter/الزر/الملء التلقائي)
+        [otp, rec].forEach((form) => {
+            let sent = false;
+            form.addEventListener('submit', (e) => {
+                if (sent) { e.preventDefault(); return; }
+                sent = true;
+                form.querySelectorAll('button[type=submit]').forEach(b => b.disabled = true);
+            });
+        });
         code.addEventListener('input', () => {
             code.value = code.value.replace(/[٠-٩]/g, d => '٠١٢٣٤٥٦٧٨٩'.indexOf(d)).replace(/\D/g, '').slice(0, 6);
             if (code.value.length === 6) otp.requestSubmit();

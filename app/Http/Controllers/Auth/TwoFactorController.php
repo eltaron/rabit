@@ -61,6 +61,9 @@ class TwoFactorController extends Controller
             'code.digits' => 'رمز التحقق يجب أن يكون 6 أرقام.',
         ]);
 
+        // طلب مكرر (إرسال مزدوج للنموذج) بعد تفعيل ناجح للتو: لا نعيد المستخدم لصفحة إعداد بـ QR جديد
+        if ($resp = $this->alreadyEnabledJustNow($request)) return $resp;
+
         $secret = $this->pendingSecret($request, false);
         if (! $secret) {
             return redirect()->route('2fa.setup')->with('warning', 'انتهت صلاحية جلسة الإعداد، امسح الرمز الجديد.');
@@ -71,6 +74,15 @@ class TwoFactorController extends Controller
         $g = new Google2FA();
         $ts = $g->verifyKeyNewer($secret, $this->digits($request->code), 0, $this->window());
         if ($ts === false) {
+            $user = $request->user();
+            $code = $this->digits($request->code);
+            $this->logFailedOtp($user, $code, ['pending' => $secret, 'active' => $user->hasTwoFactor() ? $user->two_factor_secret : null]);
+
+            // الرمز من الجهاز المفعّل حالياً: المستخدم في صفحة "تغيير الجهاز" بالخطأ
+            if ($user->hasTwoFactor() && $g->verifyKey($user->two_factor_secret, $code, $this->window())) {
+                return redirect()->route('dashboard')->with('info', 'المصادقة الثنائية مفعّلة بالفعل على حسابك، والرمز الذي أدخلته صحيح لجهازك الحالي. لا حاجة لإعادة الإعداد. (صفحة الإعداد تُستخدم فقط لتغيير الجهاز بمسح رمز QR جديد.)');
+            }
+
             RateLimiter::hit($this->throttleKey($request), 300);
             return back()->withErrors(['code' => 'رمز التحقق غير صحيح. إن كنت مسحت رمزاً من قبل، احذف الحساب القديم من تطبيق المصادقة وامسح الرمز الظاهر الآن، ثم أدخل الرمز الحالي.']);
         }
@@ -149,6 +161,11 @@ class TwoFactorController extends Controller
             return redirect()->route('2fa.setup');
         }
 
+        // طلب مكرر بعد تحقق ناجح في نفس الجلسة: لا نعيد فحص رمز استُهلك للتو
+        if ($request->session()->get('2fa_verified')) {
+            return redirect()->intended(route('dashboard'));
+        }
+
         $useRecovery = $request->filled('recovery_code');
         $request->validate(
             $useRecovery ? ['recovery_code' => ['required', 'string', 'max:30']] : ['code' => ['required', 'digits:6']],
@@ -163,6 +180,9 @@ class TwoFactorController extends Controller
         $ok = $useRecovery ? $this->consumeRecoveryCode($user, $request->recovery_code) : $this->checkOtp($user, $request->code);
 
         if (! $ok) {
+            if (! $useRecovery) {
+                $this->logFailedOtp($user, $this->digits($request->code), ['active' => $user->two_factor_secret]);
+            }
             RateLimiter::hit($this->throttleKey($request), 300);
             $this->audit($request, '2fa_failed', $useRecovery ? 'فشل الدخول بكود استرداد' : 'فشل التحقق بخطوتين');
             $field = $useRecovery ? 'recovery_code' : 'code';
@@ -252,6 +272,60 @@ class TwoFactorController extends Controller
             $user->forceFill(['two_factor_secret' => $g->generateSecretKey(32), 'two_factor_enabled' => false])->save();
         }
         return $user->two_factor_secret ?: null;
+    }
+
+    /**
+     * هل هذا طلب تفعيل مكرر وصل بعد تفعيل/تغيير جهاز ناجح منذ لحظات؟
+     * (الطلب الأول يستهلك السر المؤقت، فبدون هذا الفحص يُعاد المستخدم لإعداد جديد بـ QR مختلف)
+     */
+    private function alreadyEnabledJustNow(Request $request): ?RedirectResponse
+    {
+        $user = $request->user();
+        $session = $request->session();
+
+        if ($session->has(self::PENDING) || ! $user->hasTwoFactor() || ! $session->get('2fa_verified')) {
+            return null;
+        }
+        if (! $user->two_factor_confirmed_at || $user->two_factor_confirmed_at->lt(now()->subMinutes(2))) {
+            return null;
+        }
+
+        if ($session->has('2fa_recovery_codes')) {
+            $session->reflash(); // إبقاء أكواد الاسترداد لصفحة العرض التالية
+
+            return redirect()->route('2fa.recovery');
+        }
+
+        return redirect()->route('dashboard');
+    }
+
+    /**
+     * تسجيل تشخيص لمحاولة فاشلة (بدون أي أسرار): هل يطابق الرمز أحد الأسرار المعروفة وبأي فرق زمني؟
+     * يساعد في التفريق بين: إدخال قديم في التطبيق / فرق ساعة الهاتف / رمز جهاز آخر.
+     */
+    private function logFailedOtp(User $user, string $code, array $secrets): void
+    {
+        $g = new Google2FA();
+        $now = $g->getTimestamp();
+        $matches = [];
+
+        foreach (array_filter($secrets) as $name => $secret) {
+            for ($d = -20; $d <= 20; $d++) {
+                try {
+                    if (hash_equals($g->oathTotp($secret, $now + $d), $code)) {
+                        $matches[] = "{$name} (offset ".($d * 30).'s)';
+                    }
+                } catch (\Throwable) {
+                }
+            }
+        }
+
+        \Illuminate\Support\Facades\Log::warning('2FA code rejected', [
+            'user_id' => $user->id,
+            'page' => request()->path(),
+            'has_pending' => ! empty($secrets['pending']),
+            'matches' => $matches ?: 'none within ±10 min (old/other authenticator entry)',
+        ]);
     }
 
     /** نافذة السماح بفرق الساعة: عدد فترات الـ30 ثانية قبل/بعد الوقت الحالي */

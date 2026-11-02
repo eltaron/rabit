@@ -1,0 +1,204 @@
+/* ==========================================================================
+   Octagon — هوية "رابط" (KFS Royal) فوق Filament
+   أخضر مصري · ذهبي · عاجي · RTL
+   ========================================================================== */
+
+:root {
+    --egypt-green: #123F35;
+    --egypt-green-2: #185447;
+    --egypt-green-deep: #0A2924;
+    --egypt-gold: #B8954F;
+    --egypt-gold-2: #D1B574;
+    --egypt-gold-line: rgba(184,149,79,.28);
+    --egypt-gold-soft: rgba(184,149,79,.14);
+    --ivory: #FAF8F2;
+    --papyrus: #F4F0E6;
+    --white-soft: #FEFDFC;
+    --charcoal: #202522;
+    --line: rgba(18,63,53,.12);
+    --ff-ar: 'Tajawal', 'IBM Plex Sans Arabic', sans-serif;
+    --ff-num: 'Playfair Display', serif;
+    --shadow: 0 10px 35px rgba(18,63,53,.07);
+    --oct-idbar-h: 34px;
+}
+
+/* ---------- الخلفية العامة ---------- */
+body.fi-body,
+.fi-layout,
+.fi-main-ctn { background: var(--ivory); color: var(--charcoal); }
+
+h1, h2, h3, .fi-header-heading, .fi-section-header-heading, .fi-simple-header-heading { font-family: var(--ff-ar); }
+
+/* ---------- شريط الهوية الحكومية ---------- */
+.oct-idbar {
+    position: sticky; top: 0; z-index: 40;
+    height: var(--oct-idbar-h);
+    background: var(--egypt-green-deep);
+    color: rgba(254,253,252,.78);
+    font-size: .76rem;
+    border-bottom: 1px solid var(--egypt-gold-line);
+    display: flex; align-items: center; justify-content: space-between;
+    padding: 0 1.25rem;
+}
+.oct-idbar-start, .oct-idbar-end { display: flex; align-items: center; gap: .9rem; white-space: nowrap; }
+.oct-idbar strong { color: var(--white-soft); font-weight: 700; font-family: var(--ff-ar); }
+.oct-gold { color: var(--egypt-gold-2); }
+.oct-sep { width: 1px; height: 12px; background: var(--egypt-gold-line); display: inline-block; }
+.oct-flag { display: inline-flex; flex-direction: column; width: 18px; height: 12px; border: 1px solid rgba(254,253,252,.25); }
+.oct-flag i { flex: 1; display: block; }
+.oct-flag i:nth-child(1) { background: #B4232A; }
+.oct-flag i:nth-child(2) { background: #F4F0E6; }
+.oct-flag i:nth-child(3) { background: #1d1f1e; }
+@media (max-width: 640px) { .oct-idbar-end { display: none; } .oct-idbar { padding: 0 .75rem; font-size: .7rem; } }
+
+/* إزاحة الشريط الجانبي والعلوي أسفل شريط الهوية */
+@media (min-width: 1024px) {
+    .fi-sidebar { top: var(--oct-idbar-h) !important; height: calc(100dvh - var(--oct-idbar-h)) !important; }
+}
+.fi-topbar-ctn { top: var(--oct-idbar-h) !important; }
+
+/* ---------- الشعار ---------- */
+.oct-brand { display: inline-flex; align-items: center; gap: .65rem; height: 100%; }
+.oct-brand-logo { height: 2.5rem; width: auto; object-fit: contain; }
+.oct-brand-sep { width: 1px; height: 1.9rem; background: var(--egypt-gold-line); }
+.oct-brand-text { display: flex; flex-direction: column; line-height: 1.15; }
+.oct-brand-text strong { font-family: var(--ff-num); font-size: 1.15rem; letter-spacing: .04em; color: var(--egypt-gold-2); }
+.oct-brand-text small { font-family: var(--ff-ar); font-size: .68rem; color: rgba(254,253,252,.7); font-weight: 500; }
+
+/* في الشريط العلوي / صفحة الدخول (خلفية فاتحة) */
+.fi-topbar .oct-brand-text strong,
+.fi-simple-layout .oct-brand-text strong { color: var(--egypt-gold); }
+.fi-topbar .oct-brand-text small,
+.fi-simple-layout .oct-brand-text small { color: var(--egypt-green); }
+
+/* ---------- الشريط الجانبي (أخضر داكن مثل الموقع) ---------- */
+.fi-sidebar {
+    background: var(--egypt-green-deep) !important;
+    border-inline-start: 1px solid var(--egypt-gold-line);
+    background-image:
+        radial-gradient(circle at 100% 0, rgba(184,149,79,.10), transparent 45%),
+        linear-gradient(180deg, var(--egypt-green-deep), #0d322b) !important;
+}
+.fi-sidebar-header,
+.fi-sidebar-header-ctn {
+    background: transparent !important;
+    border-bottom: 1px solid var(--egypt-gold-line) !important;
+    box-shadow: none !important;
+}
+.fi-sidebar .fi-sidebar-group-label { color: var(--egypt-gold-2) !important; font-family: var(--ff-ar); font-weight: 700; letter-spacing: .02em; }
+.fi-sidebar .fi-sidebar-group-collapse-btn,
+.fi-sidebar .fi-sidebar-header-controls button,
+.fi-sidebar .fi-icon-btn { color: rgba(254,253,252,.65) !important; }
+
+.fi-sidebar .fi-sidebar-item-btn { border-radius: 8px; transition: background .25s, color .25s; }
+.fi-sidebar .fi-sidebar-item-label { color: rgba(254,253,252,.82) !important; font-weight: 500; }
+.fi-sidebar .fi-sidebar-item-icon { color: rgba(209,181,116,.75) !important; }
+.fi-sidebar .fi-sidebar-item-btn:hover { background: rgba(254,253,252,.06) !important; }
+.fi-sidebar .fi-sidebar-item-btn:hover .fi-sidebar-item-label { color: #fff !important; }
+
+.fi-sidebar .fi-sidebar-item.fi-active > .fi-sidebar-item-btn {
+    background: linear-gradient(90deg, rgba(184,149,79,.08), rgba(184,149,79,.22)) !important;
+    box-shadow: inset -3px 0 0 var(--egypt-gold);
+}
+.fi-sidebar .fi-sidebar-item.fi-active .fi-sidebar-item-label { color: var(--egypt-gold-2) !important; font-weight: 700; }
+.fi-sidebar .fi-sidebar-item.fi-active .fi-sidebar-item-icon { color: var(--egypt-gold-2) !important; }
+.fi-sidebar .fi-sidebar-item-grouped-border-part { background: rgba(209,181,116,.35) !important; }
+
+.fi-sidebar .fi-badge {
+    background: rgba(184,149,79,.16) !important;
+    color: var(--egypt-gold-2) !important;
+    box-shadow: inset 0 0 0 1px var(--egypt-gold-line) !important;
+    font-family: var(--ff-num);
+}
+
+/* ---------- الشريط العلوي ---------- */
+.fi-topbar {
+    background: rgba(250,248,242,.92) !important;
+    backdrop-filter: blur(8px);
+    border-bottom: 1px solid var(--egypt-gold-line) !important;
+    box-shadow: 0 2px 10px rgba(18,63,53,.05) !important;
+}
+
+/* ---------- عناوين الصفحات ---------- */
+.fi-header-heading { color: var(--egypt-green); font-weight: 800; position: relative; padding-bottom: .35rem; }
+.fi-header-heading::after {
+    content: ''; position: absolute; bottom: 0; inset-inline-start: 0;
+    width: 56px; height: 3px; border-radius: 2px;
+    background: linear-gradient(90deg, var(--egypt-gold), var(--egypt-gold-2));
+}
+
+/* ---------- البطاقات والأقسام ---------- */
+/* البطاقة البيضاء فقط للأقسام "المحتواة" (لها حشوة داخلية).
+   الأقسام غير المحتواة (مثل غلاف "نظرة عامة على البيانات المؤرشفة") تبقى شفافة بلا إطار. */
+.fi-section:not(.fi-section-not-contained),
+.fi-wi-stats-overview-stat,
+.fi-ta-ctn {
+    background: var(--white-soft) !important;
+    border-radius: 12px !important;
+    box-shadow: var(--shadow) !important;
+    --tw-ring-color: var(--line) !important;
+}
+.fi-section:not(.fi-section-not-contained) > .fi-section-header { border-bottom: 1px solid var(--line); }
+
+/* عنوان القسم غير المحتوى: مسافة تحته وخط ذهبي قصير بدل الالتصاق بالبطاقات */
+.fi-section-not-contained > .fi-section-header {
+    padding-bottom: .9rem;
+    margin-bottom: .35rem;
+    position: relative;
+}
+.fi-section-not-contained > .fi-section-header .fi-section-header-heading { font-size: 1.05rem; }
+.fi-section-not-contained > .fi-section-header::after {
+    content: ''; position: absolute; bottom: 0; inset-inline-start: 0;
+    width: 44px; height: 2px; border-radius: 2px; background: var(--egypt-gold);
+}
+
+/* مسافة داخلية مريحة لبطاقات الأرقام */
+.fi-wi-stats-overview-stat { padding: 1.4rem 1.5rem !important; }
+.fi-section-header-heading { color: var(--egypt-green) !important; font-weight: 700; }
+
+/* بطاقات الإحصائيات */
+.fi-wi-stats-overview-stat { position: relative; overflow: hidden; border-top: 3px solid var(--egypt-gold) !important; }
+.fi-wi-stats-overview-stat::before {
+    content: ''; position: absolute; inset-inline-end: -30px; top: -30px;
+    width: 90px; height: 90px; border-radius: 50%;
+    background: radial-gradient(circle, var(--egypt-gold-soft), transparent 70%);
+    pointer-events: none;
+}
+.fi-wi-stats-overview-stat-value { font-family: var(--ff-num); color: var(--egypt-green) !important; letter-spacing: .02em; }
+.fi-wi-stats-overview-stat-label { font-family: var(--ff-ar); font-weight: 700; color: #626963 !important; }
+
+/* ---------- الجداول ---------- */
+.fi-ta-header-cell { background: var(--papyrus) !important; color: var(--egypt-green) !important; font-family: var(--ff-ar); font-weight: 700; }
+.fi-ta-row:hover { background: rgba(184,149,79,.06) !important; }
+.fi-ta-header-cell-sorted .fi-icon { color: var(--egypt-gold) !important; }
+
+/* ---------- الأزرار والحقول ---------- */
+.fi-btn.fi-color-primary { box-shadow: 0 6px 18px rgba(18,63,53,.18); }
+.fi-input-wrp:focus-within { --tw-ring-color: var(--egypt-gold) !important; }
+.fi-pagination-item.fi-active .fi-pagination-item-btn { color: var(--egypt-gold) !important; }
+
+/* ---------- صفحة الدخول ---------- */
+.fi-simple-layout {
+    background:
+        radial-gradient(circle at 15% 10%, rgba(184,149,79,.14), transparent 40%),
+        radial-gradient(circle at 85% 90%, rgba(18,63,53,.12), transparent 45%),
+        var(--ivory) !important;
+}
+.fi-simple-main {
+    background: var(--white-soft) !important;
+    border-top: 4px solid var(--egypt-gold);
+    border-radius: 14px !important;
+    box-shadow: 0 25px 65px rgba(18,63,53,.14) !important;
+}
+.fi-simple-header-heading { color: var(--egypt-green); font-weight: 800; }
+.fi-simple-layout .oct-brand-logo { height: 3.4rem; }
+.fi-simple-layout .oct-idbar { position: fixed; inset-inline: 0; top: 0; }
+
+/* ---------- التذييل ---------- */
+.oct-footer {
+    display: flex; flex-wrap: wrap; align-items: center; justify-content: center; gap: .75rem;
+    padding: 1.1rem 1rem; margin-top: 1.5rem;
+    border-top: 1px solid var(--egypt-gold-line);
+    color: #626963; font-size: .8rem; font-family: var(--ff-ar);
+}
+.oct-footer strong { color: var(--egypt-gold); }

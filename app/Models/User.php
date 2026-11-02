@@ -2,7 +2,10 @@
 
 namespace App\Models;
 
+use App\Support\RoleLabels;
 use Database\Factories\UserFactory;
+use Filament\Models\Contracts\FilamentUser;
+use Filament\Panel;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Relations\HasMany;
 use Illuminate\Foundation\Auth\User as Authenticatable;
@@ -10,7 +13,7 @@ use Illuminate\Notifications\Notifiable;
 use Laravel\Sanctum\HasApiTokens;
 use Spatie\Permission\Traits\HasRoles;
 
-class User extends Authenticatable
+class User extends Authenticatable implements FilamentUser
 {
     /** @use HasFactory<UserFactory> */
     use HasApiTokens, HasFactory, HasRoles, Notifiable;
@@ -63,6 +66,16 @@ class User extends Authenticatable
         ];
     }
 
+    /** الدخول للوحة Octagon (عرض فقط): دور octagon أو super_admin */
+    public function canAccessPanel(Panel $panel): bool
+    {
+        if ($panel->getId() === 'octagon') {
+            return $this->is_active && $this->hasAnyRole(['octagon', 'super_admin']);
+        }
+
+        return false;
+    }
+
     public function governorate()
     {
         return $this->belongsTo(Governorate::class);
@@ -108,7 +121,8 @@ class User extends Authenticatable
     public function getRoleLabelAttribute(): string
     {
         $role = $this->roles->first();
-        return $role ? (\App\Support\RoleLabels::label($role->name)) : '—';
+
+        return $role ? (RoleLabels::label($role->name)) : '—';
     }
 
     public function formTemplates(): HasMany

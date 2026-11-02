@@ -117,9 +117,16 @@
             );
         });
         const code = document.getElementById('code');
+        // منع الإرسال المزدوج (إرسال تلقائي عند 6 أرقام + Enter/الزر/الملء التلقائي)
+        let sent = false;
+        code.form.addEventListener('submit', (e) => {
+            if (sent) { e.preventDefault(); return; }
+            sent = true;
+            code.form.querySelectorAll('button[type=submit]').forEach(b => b.disabled = true);
+        });
         code.addEventListener('input', () => {
             code.value = code.value.replace(/[٠-٩]/g, d => '٠١٢٣٤٥٦٧٨٩'.indexOf(d)).replace(/\D/g, '').slice(0, 6);
-            if (code.value.length === 6) code.form.requestSubmit();
+            if (code.value.length === 6 && !sent) code.form.requestSubmit();
         });
     })();
 </script>

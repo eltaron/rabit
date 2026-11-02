@@ -18,7 +18,7 @@ return [
     'version' => env('APP_VERSION', '2.0.0'),
 
     // يُغيَّر عند كل إصدار لإبطال كاش الأصول وتحديث Service Worker
-    'asset_version' => env('ASSET_VERSION', '2026.10.07-2'),
+    'asset_version' => env('ASSET_VERSION', '2026.11.02-1'),
 
     // المصادقة الثنائية: إجبارية لكل الحسابات (يمكن تعطيل الإجبار للتطوير فقط بـ TWO_FACTOR_REQUIRED=false)
     'two_factor' => [

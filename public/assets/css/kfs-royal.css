@@ -438,7 +438,25 @@ img { max-width: 100%; }
     border-radius: 8px;
     box-shadow: var(--shadow);
 }
-.card-kfs { overflow: hidden; transition: box-shadow .5s var(--ease), border-color .5s var(--ease); }
+.card-kfs {
+    overflow: hidden; transition: box-shadow .5s var(--ease), border-color .5s var(--ease);
+    /* Bootstrap يعرّف متغيرات المسافات على .card فقط؛ بدونها تصبح حشوة .card-body صفراً
+       فيلتصق المحتوى بالحواف في كل بطاقات .card-kfs (التي لا تحمل الصنف card) */
+    --bs-card-spacer-y: 1.25rem;
+    --bs-card-spacer-x: 1.25rem;
+    --bs-card-cap-padding-y: .95rem;
+    --bs-card-cap-padding-x: 1.25rem;
+    --bs-card-title-spacer-y: .5rem;
+    --bs-card-color: inherit;
+    --bs-card-border-width: 1px;
+    --bs-card-border-color: var(--line);
+    --bs-card-inner-border-radius: 7px;
+}
+.card-kfs > .card-body { padding: var(--bs-card-spacer-y) var(--bs-card-spacer-x); }
+.card-kfs > .card-footer { padding: var(--bs-card-cap-padding-y) var(--bs-card-cap-padding-x); }
+@media (max-width: 575.98px) {
+    .card-kfs { --bs-card-spacer-y: 1rem; --bs-card-spacer-x: 1rem; --bs-card-cap-padding-x: 1rem; }
+}
 .card-kfs:hover { transform: none; box-shadow: var(--shadow); }
 .card-kfs.is-hover:hover { box-shadow: var(--shadow-lg); border-color: var(--line-gold); }
 .card-header, .card-kfs .card-header {
